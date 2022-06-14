@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="fonts/icomoon/style.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- VueJS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+    <script src="https://unpkg.com/vue-router@2.0.0"></script>
+
+    <!-- AXIOS -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <title>Formulario</title>
+  </head>
+  <body>
+    <div class="content" id="app">
+      <div class="container">
+        <div class="row align-items-stretch justify-content-center no-gutters">
+          <div class="col-md-7">
+            <div class="form h-100 contact-wrap p-5">
+              <div style="text-align: center; margin-bottom: 15px;">
+                <img src="images/logo.png" alt="logo" width="200" />
+              </div>
+
+              <h3 class="text-center">
+                ALGO DIFERENTE ESTÁ NACIENDO EN SORITOR
+              </h3>
+              <p class="text-center">
+                Para continuar, por favor regístrate con los siguientes datos:
+              </p>
+              <div class="mb-5">
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Nombre(s)</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="name"
+                      id="name"
+                      placeholder="Tu nombre"
+                      v-model="person.name"
+                    />
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label"
+                      >Apellido Paterno</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="lastname1"
+                      id="lastname1"
+                      placeholder="Tu apelido paterno"
+                      v-model="person.lastname1"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label"
+                      >Apellido Materno</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="lastname2"
+                      id="lastname2"
+                      placeholder="Tu apellido materno"
+                      v-model="person.lastname2"
+                    />
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label"
+                      >Fecha de cumpleaños</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control"
+                      name="birthdate"
+                      id="birthdate"
+                      placeholder="¿Cuando naciste?"
+                      v-model="person.birthdate"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Distrito</label>
+                    <select
+                      class="form-control"
+                      id="district"
+                      v-model="person.district"
+                    >
+                      <option value="0" selected>Selecciona tu distrito</option>
+                      <option>SORITOR</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Ciudad</label>
+                    <select
+                      id="town"
+                      class="form-control"
+                      v-model="person.town"
+                    >
+                      <option value="0">¿Dónde vives?</option>
+                      <option>SORITOR</option>
+                      <option>SAN MARCOS</option>
+                      <option>VILLA DEL TRIUNFO</option>
+                      <option>ALTO PERU</option>
+                      <option>LUCERO</option>
+                      <option>SAN MIGUEL</option>
+                      <option>DONCELL</option>
+                      <option>JORGE CHAVEZ</option>
+                      <option>LIMABAMBA</option>
+                      <option>VILLA HERMOSA</option>
+                      <option>OTROS CASERIOS</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4 form-group mb-3">
+                    <label for="" class="col-form-label">País</label>
+                    <select
+                      name="dial_code"
+                      id="dial_code"
+                      class="form-control"
+                      v-model="person.country"
+                    >
+                      <option value="+51">🇵🇪 Perú</option>
+                    </select>
+                  </div>
+                  <div class="col-md-8 form-group mb-3">
+                    <label for="" class="col-form-label">Celular</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="phone"
+                      id="phone"
+                      placeholder="123456789 (9 Dígitos)"
+                      v-model="person.phone"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
+                    <label for="" class="col-form-label">Preocupación</label>
+                    <select
+                      id="concern"
+                      class="form-control"
+                      v-model="person.worry"
+                    >
+                      <option value="0">¿Qué te preocupa más?</option>
+                      <option>
+                        Economía (Agricultura, Ganadería, Comercio)
+                      </option>
+                      <option>Mejoramiento de vías</option>
+                      <option>Educación</option>
+                      <option>Seguridad</option>
+                      <option>Salud</option>
+                      <option>Otro</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
+                    <label for="" class="col-form-label">Propuesta</label>
+                    <input
+                      type="text"
+                      name="proposal"
+                      id="proposal"
+                      maxlength="200"
+                      class="form-control"
+                      placeholder="¿Cuál es tu propuesta?"
+                      v-model="person.proposal"
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Ayuda</label>
+                    <div class="form-group">
+                      <p>¿Cómo te gustaría sumar?</p>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Con mi voto
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="2"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Invitando a mis amig@s
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="3"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Con mis redes sociales
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="4"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          En los eventos
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="5"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Como personer@
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="6"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          En el deporte
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="7"
+                          id="defaultCheck1"
+                          v-model="person.howToHelp"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Otro
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Sobre ti</label>
+                    <div class="form-group">
+                      <p>¿Dime algo más sobre ti?</p>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="1"
+                          id="defaultCheck1"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Soy agricultor(a)
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="2"
+                          id="defaultCheck1"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Trabajo en educación
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="3"
+                          id="defaultCheck1"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Soy transportista
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="4"
+                          id="defaultCheck1"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Soy emprendedor(a)
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="5"
+                          id="defaultCheck1"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Soy rondero(a)
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="6"
+                          id="defaultCheck1"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Soy deportista
+                        </label>
+                      </div>
+                      <div class="form-check" style="position: relative">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="7"
+                          id="defaultCheck15"
+                          v-model="person.aboutMe"
+                        />
+                        <label class="form-check-label" for="defaultCheck15">
+                          Soy estudiante
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-md-5 form-group text-center">
+                    <button
+                      class="btn btn-block btn-primary rounded-0 py-2 px-4"
+                      @click="sendForm()"
+                    >
+                      ENVIAR
+                      <i class="fa fa-paper-plane"></i>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="modal fade"
+                  id="exampleModalCenter"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="exampleModalCenterTitle"
+                  aria-hidden="true"
+                >
+                  <div
+                    class="modal-dialog modal-dialog-centered"
+                    role="document"
+                  >
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">
+                          FELICIDADES
+                        </h5>
+                        <button
+                          type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <h4>Formulario enviado con éxito</h4>
+                        <p>
+                          ¡Comparte este formulario con tus familiares o amigos!
+                        </p>
+                        <p>Copia el enlace: {{generateLink(userId)}}</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal"
+                          @click="restartFrom()"
+                        >
+                          Cerrar
+                          <i class="fa fa-xmark"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          @click="updatePerson(userId)"
+                        >
+                          Copiar enlace
+                          <i class="fa fa-copy"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+      // $('#exampleModalCenter').on('hide', function() {
+      //   window.location.reload()
+      // })
+      // $('#exampleModalCenter').on('hide.bs.modal', function(e) {
+      //   window.location.reload()
+      // })
+
+      // $('#exampleModalCenter').blur(function() {
+      //   console.log('asdada')
+      // })
+    </script>
+
+    <script>
+      let app = new Vue({
+        el: '#app',
+        created() {},
+        data() {
+          return {
+            data: [],
+            userId: null,
+            api: 'https://effervescent-cassata-65a1db.netlify.app/api',
+            form: 'https://effervescent-cassata-65a1db.netlify.app/form',
+            // api: 'http://localhost:3010/api',
+            // form: 'http://localhost:3010/form',
+            person: {
+              name: null,
+              lastname1: null,
+              lastname2: null,
+              birthdate: null,
+              district: '0',
+              town: '0',
+              country: '+51',
+              phone: null,
+              worry: '0',
+              proposal: null,
+              howToHelp: [],
+              aboutMe: [],
+            },
+          }
+        },
+        methods: {
+          sendForm() {
+            // this.openModal()
+            const { ref } = this.getParams()
+            axios({
+              method: 'post',
+              url: `${this.api}/persons/create`,
+              data: {
+                ...this.person,
+                comeFrom: ref || undefined,
+              },
+            })
+              .then(({ data }) => {
+                //   console.log(data.data)
+                this.userId = data.person._id
+                this.openModal()
+              })
+              .catch((err) => {
+                console.log('err', err)
+              })
+          },
+          openModal() {
+            $('#exampleModalCenter').modal('show')
+          },
+          updatePerson(id) {
+            axios({
+              method: 'put',
+              url: `${this.api}/persons/${id}`,
+              data: {
+                sharedLink: true,
+              },
+            })
+              .then(({ data }) => {
+                this.copyToClipboard(this.generateLink(id))
+              })
+              .catch((err) => {
+                console.log('err', err)
+              })
+          },
+          generateLink(id) {
+            return `${this.form}/form?ref=${id}`
+          },
+          copyToClipboard(str) {
+            if (
+              navigator &&
+              navigator.clipboard &&
+              navigator.clipboard.writeText
+            )
+              return navigator.clipboard.writeText(str)
+            return Promise.reject('The Clipboard API is not available.')
+          },
+
+          restartFrom() {
+            window.location.reload()
+          },
+
+          getParams() {
+            return new Proxy(new URLSearchParams(window.location.search), {
+              get: (searchParams, prop) => searchParams.get(prop),
+            })
+          },
+        },
+      })
+    </script>
+  </body>
+</html>
