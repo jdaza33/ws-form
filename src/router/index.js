@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import Users from '../views/Users.vue'
 import Persons from '../views/Persons.vue'
+import Forms from '../views/Forms.vue'
 
 //Components
 import Dashboard from '../components/Sidebar.vue'
@@ -17,12 +18,17 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/panel',
+    path: '/',
     name: 'Home',
-    redirect: '/panel/login',
+    redirect: '/login',
   },
+  // {
+  //   path: '/panel',
+  //   name: 'Home',
+  //   redirect: '/panel/login',
+  // },
   {
-    path: '/panel/login',
+    path: '/login',
     name: 'Login',
     component: Login,
   },
@@ -32,7 +38,7 @@ const routes = [
     component: ResetPassword,
   },
   {
-    path: '/panel/dashboard',
+    path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
     meta: {
@@ -51,6 +57,14 @@ const routes = [
         path: '/persons',
         name: 'Persons',
         component: Persons,
+        meta: {
+          requiredAuth: true,
+        },
+      },
+      {
+        path: '/forms',
+        name: 'Forms',
+        component: Forms,
         meta: {
           requiredAuth: true,
         },

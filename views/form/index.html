@@ -148,19 +148,29 @@
                       v-model="person.lastname2"
                     />
                   </div>
-
                   <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label"
                       >Fecha de cumpleaños</label
                     >
                     <input
+                      class="form-control datepicker-here required"
+                      readonly
+                      data-position="bottom left"
+                      type="text"
+                      data-language="es"
+                      name="birthdate"
+                      id="birthdate"
+                      placeholder="¿Cuando cumples?"
+                      style="background: #fff url(https://peru.eleckto.com/soritor/img/calendar.svg) no-repeat right center; color: black;"
+                    />
+                    <!-- <input
                       type="date"
                       class="form-control"
                       name="birthdate"
                       id="birthdate"
-                      placeholder="¿Cuando naciste?"
+                      placeholder="¿Cuando cumples?"
                       v-model="person.birthdate"
-                    />
+                    /> -->
                   </div>
                 </div>
 
@@ -173,7 +183,8 @@
                       v-model="person.district"
                     >
                       <option value="0" selected>Selecciona tu distrito</option>
-                      <option>SORITOR</option>
+                      <option v-for="item in config.district">{{item}}</option>
+                      <!-- <option>SORITOR</option> -->
                     </select>
                   </div>
 
@@ -185,17 +196,7 @@
                       v-model="person.town"
                     >
                       <option value="0">¿Dónde vives?</option>
-                      <option>SORITOR</option>
-                      <option>SAN MARCOS</option>
-                      <option>VILLA DEL TRIUNFO</option>
-                      <option>ALTO PERU</option>
-                      <option>LUCERO</option>
-                      <option>SAN MIGUEL</option>
-                      <option>DONCELL</option>
-                      <option>JORGE CHAVEZ</option>
-                      <option>LIMABAMBA</option>
-                      <option>VILLA HERMOSA</option>
-                      <option>OTROS CASERIOS</option>
+                      <option v-for="item in config.town">{{item}}</option>
                     </select>
                   </div>
                 </div>
@@ -232,17 +233,19 @@
                       id="concern"
                       class="form-control"
                       v-model="person.worry"
+                      @change="openOtherWorryText"
                     >
                       <option value="0">¿Qué te preocupa más?</option>
-                      <option>
-                        Economía (Agricultura, Ganadería, Comercio)
-                      </option>
-                      <option>Mejoramiento de vías</option>
-                      <option>Educación</option>
-                      <option>Seguridad</option>
-                      <option>Salud</option>
-                      <option>Otro</option>
+                      <option v-for="item in config.worry">{{item}}</option>
+                      <option value="other">Otro</option>
                     </select>
+                    <input
+                      v-show="openOtherWorry"
+                      type="text"
+                      class="form-control"
+                      placeholder="Añade otra preocupación"
+                      v-model="otherWorry"
+                    />
                   </div>
                 </div>
 
@@ -266,89 +269,45 @@
                     <label for="" class="col-form-label">Ayuda</label>
                     <div class="form-group">
                       <p>¿Cómo te gustaría sumar?</p>
+                      <div
+                        class="form-check"
+                        style="position: relative"
+                        v-for="item in config.howToHelp"
+                      >
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          :value="item"
+                          :id="item.split('').join('')"
+                          v-model="person.howToHelp"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="item.split('').join('')"
+                        >
+                          {{item}}
+                        </label>
+                      </div>
+
                       <div class="form-check" style="position: relative">
                         <input
                           class="form-check-input"
                           type="checkbox"
                           value="1"
-                          id="defaultCheck1"
+                          id="otherHowToHelp"
                           v-model="person.howToHelp"
+                          @change="openOtherCheckbox"
                         />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Con mi voto
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="2"
-                          id="defaultCheck1"
-                          v-model="person.howToHelp"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Invitando a mis amig@s
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="3"
-                          id="defaultCheck1"
-                          v-model="person.howToHelp"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Con mis redes sociales
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="4"
-                          id="defaultCheck1"
-                          v-model="person.howToHelp"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          En los eventos
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="5"
-                          id="defaultCheck1"
-                          v-model="person.howToHelp"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Como personer@
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="6"
-                          id="defaultCheck1"
-                          v-model="person.howToHelp"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          En el deporte
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="7"
-                          id="defaultCheck1"
-                          v-model="person.howToHelp"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
+                        <label class="form-check-label" for="otherHowToHelp">
                           Otro
                         </label>
+                        <input
+                          v-show="openOtherHowToHelpText"
+                          type="text"
+                          class="form-control"
+                          placeholder="Añade otra opción"
+                          v-model="otherHowToHelpText"
+                        />
                       </div>
                     </div>
                   </div>
@@ -356,88 +315,23 @@
                     <label for="" class="col-form-label">Sobre ti</label>
                     <div class="form-group">
                       <p>¿Dime algo más sobre ti?</p>
-                      <div class="form-check" style="position: relative">
+                      <div
+                        class="form-check"
+                        style="position: relative"
+                        v-for="item in config.aboutMe"
+                      >
                         <input
                           class="form-check-input"
                           type="checkbox"
-                          value="1"
-                          id="defaultCheck1"
+                          :value="item"
+                          :id="item.split('').join('')"
                           v-model="person.aboutMe"
                         />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Soy agricultor(a)
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="2"
-                          id="defaultCheck1"
-                          v-model="person.aboutMe"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Trabajo en educación
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="3"
-                          id="defaultCheck1"
-                          v-model="person.aboutMe"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Soy transportista
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="4"
-                          id="defaultCheck1"
-                          v-model="person.aboutMe"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Soy emprendedor(a)
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="5"
-                          id="defaultCheck1"
-                          v-model="person.aboutMe"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Soy rondero(a)
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="6"
-                          id="defaultCheck1"
-                          v-model="person.aboutMe"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Soy deportista
-                        </label>
-                      </div>
-                      <div class="form-check" style="position: relative">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value="7"
-                          id="defaultCheck15"
-                          v-model="person.aboutMe"
-                        />
-                        <label class="form-check-label" for="defaultCheck15">
-                          Soy estudiante
+                        <label
+                          class="form-check-label"
+                          :for="item.split('').join('')"
+                        >
+                          {{item}}
                         </label>
                       </div>
                     </div>
@@ -523,6 +417,10 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.validate.min.js"></script>
     <script src="js/main.js"></script>
+    <!-- datepicker -->
+    <link href="css/datepicker.min.css" rel="stylesheet" type="text/css" />
+    <script src="js/datepicker.min.js"></script>
+    <script src="js/datepicker.es.js"></script>
 
     <script>
       // $('#exampleModalCenter').on('hide', function() {
@@ -540,20 +438,37 @@
     <script>
       let app = new Vue({
         el: '#app',
-        created() {},
+        created() {
+          this.listFormConfig()
+          // Initialization
+          // $('#cumple').datepicker([options])
+          // Access instance of plugin
+          $('#birthdate').data('datepicker')
+          $('#birthdate').datepicker({
+            autoClose: true,
+          })
+        },
         mounted() {
           $('#modalWelcome').modal({ show: true, backdrop: 'static' })
-          this.$refs.videoRef.src = 'videos/VIDEODEPRUEBA.mp4'
+          // this.$refs.videoRef.src = this.config.video
           this.$refs.videoRef.play()
         },
         data() {
           return {
             data: [],
             userId: null,
-            api: 'https://ws-form.herokuapp.com/api',
-            form: 'https://ws-form.herokuapp.com',
-            // api: 'http://localhost:3010/api',
-            // form: 'http://localhost:3010/form',
+            // api: 'https://ws-form.herokuapp.com/api',
+            // form: 'https://ws-form.herokuapp.com',
+            api: 'http://localhost:3010/api',
+            form: 'http://localhost:3010/form',
+            config: {
+              istrict: [],
+              town: [],
+              worry: [],
+              howToHelp: [],
+              aboutMe: [],
+              video: '',
+            },
             person: {
               name: null,
               lastname1: null,
@@ -568,11 +483,46 @@
               howToHelp: [],
               aboutMe: [],
             },
+            birthdate: '',
+            otherWorry: null,
+            openOtherWorry: false,
+
+            otherHowToHelpText: null,
+            openOtherHowToHelpText: false,
           }
         },
         methods: {
+          openOtherWorryText() {
+            if (this.person['worry'] === 'other') this.openOtherWorry = true
+            else this.openOtherWorry = false
+          },
+          openOtherCheckbox() {
+            this.openOtherHowToHelpText = !this.openOtherHowToHelpText
+          },
+          listFormConfig() {
+            axios({
+              method: 'get',
+              url: `${this.api}/forms/list`,
+            })
+              .then(({ data }) => {
+                this.config = data.form
+                this.$refs.videoRef.src = this.config.video
+              })
+              .catch((err) => {
+                console.log('err', err)
+              })
+          },
           sendForm() {
             // this.openModal()
+
+            //Revisamos campos otros
+            if (this.openOtherWorry) this.person.worry = this.otherWorry
+            if (this.openOtherHowToHelpText)
+              this.person.howToHelp.push(this.otherHowToHelpText)
+
+            //Obtenemos la fecha
+            this.person.birthdate = document.getElementById('birthdate').value
+
             const { ref } = this.getParams()
             axios({
               method: 'post',

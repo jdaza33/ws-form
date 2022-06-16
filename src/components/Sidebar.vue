@@ -23,10 +23,9 @@
           <!-- Opciones del menú -->
           <ul class="menu-list">
             <li>
-              <!-- @click="goMenu('Form')" -->
               <a
-                
-                :class="$route.name == 'Post' ? 'active' : ''"
+                @click="goMenu('Forms')"
+                :class="$route.name == 'Forms' ? 'active' : ''"
                 style="padding: 0.75em;"
               >
                 <b-icon

@@ -318,7 +318,7 @@ export default {
       delete user.__v
 
       user.createdAt = this.msToDate(user.createdAt)
-      user.birthdate = this.msToDate(user.birthdate)
+      // user.birthdate = this.msToDate(user.birthdate)
 
       if (user.comeFrom)
         user.comeFrom = `<strong><i style="color: #1363DF;">${user.comeFrom.name} ${user.comeFrom.lastname1}</i></strong>`

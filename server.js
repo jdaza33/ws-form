@@ -46,7 +46,7 @@ const Person = mongoose.model(
     name: String,
     lastname1: String,
     lastname2: String,
-    birthdate: Number,
+    birthdate: String,
     district: String,
     town: String,
     country: String,
@@ -64,6 +64,18 @@ const Person = mongoose.model(
   })
 )
 
+const Form = mongoose.model(
+  'Forms',
+  mongoose.Schema({
+    district: [String],
+    town: [String],
+    worry: [String],
+    howToHelp: [String],
+    aboutMe: [String],
+    video: String,
+  })
+)
+
 // const admin = new Admin({
 //   name: 'Test2',
 //   password: '123456',
@@ -71,6 +83,49 @@ const Person = mongoose.model(
 //   createdAt: Date.now()
 // })
 // admin.save().then(() => console.log('meow'))
+
+// const form = new Form({
+//   district: ['SORITOR'],
+//   town: [
+//     'SORITOR',
+//     'SAN MARCOS',
+//     'VILLA DEL TRIUNFO',
+//     'ALTO PERU',
+//     'LUCERO',
+//     'SAN MIGUEL',
+//     'DONCELL',
+//     'JORGE CHAVEZ',
+//     'LIMABAMBA',
+//     'VILLA HERMOSA',
+//     'OTROS CASERIOS',
+//   ],
+//   worry: [
+//     'Economía (Agricultura, Ganadería, Comercio)',
+//     'Mejoramiento de vías',
+//     'Educación',
+//     'Seguridad',
+//     'Salud',
+//   ],
+//   howToHelp: [
+//     'Con mi voto',
+//     'Invitando a mis amig@s',
+//     'Con mis redes sociales',
+//     'En los eventos',
+//     'Como personer@',
+//     'En el deporte',
+//   ],
+//   aboutMe: [
+//     'Soy agricultor(a)',
+//     'Trabajo en educación',
+//     'Soy transportista',
+//     'Soy emprendedor(a)',
+//     'Soy rondero(a)',
+//     'Soy deportista',
+//     'Soy estudiante',
+//   ],
+//   video: 'videos/VIDEODEPRUEBA.mp4',
+// })
+// form.save().then(() => console.log('meow'))
 
 app.use(cors())
 app.use(express.json())
@@ -142,7 +197,6 @@ app.delete('/api/users/:id', async (req, res, next) => {
 })
 
 /**PERSONS */
-
 app.post('/api/persons/list', async (req, res, next) => {
   try {
     const persons = await Person.find({})
@@ -160,7 +214,7 @@ app.post('/api/persons/create', async (req, res, next) => {
   try {
     const data = req.body
     data.createdAt = Date.now()
-    data.birthdate = new Date(data.birthdate).getTime()
+    // data.birthdate = new Date(data.birthdate).getTime()
     const person = await Person.create(data)
     res.json({ success: true, person })
   } catch (error) {
@@ -179,6 +233,60 @@ app.put('/api/persons/:id', async (req, res, next) => {
     res.status(403).json({ error })
   }
 })
+
+/**FORMS */
+app.get('/api/forms/list/', async (req, res, next) => {
+  try {
+    // const { type } = req.params
+    // const selected = {}
+    // selected[type] = 1
+    const form = await Form.findOne({}).lean()
+    res.json({ success: true, form })
+  } catch (error) {
+    console.log('error', error)
+    res.status(403).json({ error })
+  }
+})
+
+app.put('/api/forms', async (req, res, next) => {
+  try {
+    await Form.updateOne({}, { $set: req.body })
+    res.json({ success: true })
+  } catch (error) {
+    console.log('error', error)
+    res.status(403).json({ error })
+  }
+})
+
+// app.put('/api/forms/:type/:value', async (req, res, next) => {
+//   try {
+//     const { type, value } = req.params
+//     const tmp = {}
+//     tmp[type] = value
+//     const changes = {}
+//     if (type === 'video') changes.$set = tmp
+//     else changes.$push = tmp
+
+//     await Form.updateOne({}, changes)
+//     res.json({ success: true })
+//   } catch (error) {
+//     console.log('error', error)
+//     res.status(403).json({ error })
+//   }
+// })
+// app.delete('/api/forms/:type/:value', async (req, res, next) => {
+//   try {
+//     const { type, value } = req.params
+//     const tmp = {}
+//     tmp[type] = value
+
+//     await Form.updateOne({}, { $pull: tmp })
+//     res.json({ success: true })
+//   } catch (error) {
+//     console.log('error', error)
+//     res.status(403).json({ error })
+//   }
+// })
 
 app.listen(port, () => {
   console.log(`App running on port ${port}!`)

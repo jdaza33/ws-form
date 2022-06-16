@@ -97,7 +97,7 @@ $table-striped-row-even-hover-background-color: red;
 </style>
 
 <style>
-.contenedor {
+/* .contenedor {
   background-color: white;
   padding: 40px;
   border-radius: 0.5em;
@@ -105,7 +105,7 @@ $table-striped-row-even-hover-background-color: red;
   justify-content: center;
   align-items: center;
   margin-bottom: 4em;
-}
+} */
 
 .sombra {
   margin-top: 0px;

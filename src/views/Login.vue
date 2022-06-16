@@ -9,7 +9,7 @@
         <div class="columns is-multiline is-centered">
           <div class="column is-narrow">
             <figure class="figure-container">
-              <img src="img/logo.png" class="logo" />
+              <img src="/img/logo.png" class="logo" />
             </figure>
           </div>
         </div>
