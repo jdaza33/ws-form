@@ -34,6 +34,24 @@
           <b-tabs type="is-boxed" position="is-centered" v-model="tabs">
             <b-tab-item label="Lista" icon-pack="fas" icon="align-left">
               <div class="card contenedor sombra">
+                <b-button
+                  @click="jsontoCsv"
+                  id="btn"
+                  size="is-small"
+                  class="is-info is-uppercase is-size-6 has-text-weight-bold button-style"
+                  icon-right="download"
+                  icon-pack="fas"
+                  >Exportar</b-button
+                >
+                <b-button
+                  @click="sharedWs"
+                  id="btn"
+                  size="is-small"
+                  class="is-success is-uppercase is-size-6 has-text-weight-bold button-style"
+                  icon-right="share"
+                  icon-pack="fas"
+                  >Compartir</b-button
+                >
                 <b-table
                   :data="dataPaginate"
                   :paginated="isPaginated"
@@ -174,11 +192,11 @@
 </template>
 
 <script>
-import { VueEditor } from 'vue2-editor'
 import axios from '../config/axios.js'
+import { json2csv } from 'json-2-csv'
+import fileDownload from 'js-file-download'
 
 export default {
-  components: { VueEditor },
   data() {
     return {
       isLoading: false,
@@ -186,6 +204,7 @@ export default {
       labelPosition: 'on-border',
 
       users: [],
+      dataOrigin: [],
 
       idToEdit: null,
       isEdit: false,
@@ -214,6 +233,40 @@ export default {
     }
   },
   methods: {
+    sharedWs() {
+      this.$buefy.dialog.prompt({
+        message: `Compartir por Whatsapp`,
+        inputAttrs: {
+          type: 'text',
+          value: `Hola, te invito a llenar el siguiente formulario: ${process.env.VUE_APP_FORM_URL}`,
+        },
+        trapFocus: true,
+        confirmText: 'Enviar',
+        cancelText: 'Cerrar',
+        onConfirm: (value) => window.open(`whatsapp://send?text=${value}`),
+      })
+    },
+    jsontoCsv() {
+      const data = this.dataOrigin.map((user) => {
+        let tmp = {}
+        for (let i in user) {
+          if (i === 'howToHelp' || i === 'aboutMe') user[i] = user[i].join(', ')
+          if (i === 'comeFrom' && user[i])
+            user[i] = `${user[i].name} ${user[i].lastname1}`
+          let text = this.parseText(i)
+          if (text !== 'n/a') tmp[text] = user[i]
+        }
+        return tmp
+      })
+
+      console.log(data)
+      json2csv(this.users, (err, csv) => {
+        if (err) {
+          throw err
+        }
+        fileDownload(csv, `usuarios_${Date.now()}.csv`)
+      })
+    },
     msToDate(ms) {
       const date = new Date(ms)
       return date.toLocaleString()
@@ -224,6 +277,7 @@ export default {
         this.isLoading = true
         const { data } = await axios.post('/persons/list', {})
         this.users = data.person
+        this.dataOrigin = data.person
         this.dataPaginate = data.person
         this.isLoading = false
       } catch (error) {
@@ -385,6 +439,7 @@ export default {
   justify-content: center; */
   align-items: center;
   margin-bottom: 4em;
+  text-align: center;
 }
 
 .container-create {
@@ -449,5 +504,13 @@ export default {
 
 .button {
   min-width: 120px;
+}
+
+.button-style {
+  padding: 25px 50px 25px 50px;
+  position: relative;
+  margin-bottom: 2em;
+  margin-right: 2em;
+  margin-left: 2em;
 }
 </style>

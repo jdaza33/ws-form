@@ -73,6 +73,8 @@ const Form = mongoose.model(
     howToHelp: [String],
     aboutMe: [String],
     video: String,
+    logo: String,
+    phrase: String
   })
 )
 

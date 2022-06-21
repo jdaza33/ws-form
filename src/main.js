@@ -6,6 +6,10 @@ import 'buefy/dist/buefy.css'
 import VueCookie from 'vue-cookie'
 import VueBus from 'vue-bus'
 import VueTheMask from 'vue-the-mask'
+// import VueMobileDetection from 'vue-mobile-detection'
+// Vue.use(VueMobileDetection)
+// import device from 'vue-device-detector'
+// Vue.use(device)
 
 Vue.use(VueBus)
 Vue.use(Buefy, {

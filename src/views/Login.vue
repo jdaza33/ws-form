@@ -18,10 +18,10 @@
             <div class="sombra">
               <b-input
                 v-model="username"
-                placeholder=" Email"
+                placeholder=" Usuario"
                 ref="username"
                 size="is-large"
-                type="email"
+                type="text"
                 @keyup.enter.native="login"
               ></b-input>
               <b-input

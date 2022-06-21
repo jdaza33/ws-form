@@ -110,6 +110,41 @@
                 ></b-progress>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-6">
+                <section>
+                  <b-field label="Frase">
+                    <b-input
+                      v-model="config.phrase"
+                      placeholder="Escribe una frase"
+                      size="is-default"
+                      type="text"
+                    ></b-input>
+                  </b-field>
+                </section>
+              </div>
+              <div class="column is-6">
+                <b-field label="Logo del formulario">
+                  <b-field class="file is-primary">
+                    <b-upload v-model="logo" class="file-label">
+                      <span class="file-cta">
+                        <b-icon class="file-icon" icon="upload"></b-icon>
+                        <span class="file-label">Logo</span>
+                      </span>
+                      <span class="file-name">
+                        {{ logo.name || config.logo }}
+                      </span>
+                    </b-upload>
+                  </b-field>
+                </b-field>
+                <b-progress
+                  v-show="loadingUploadLogo > 0"
+                  :value="loadingUploadLogo"
+                  show-value
+                  format="percent"
+                ></b-progress>
+              </div>
+            </div>
             <div class="boton">
               <b-button
                 @click="updateConfig()"
@@ -140,7 +175,9 @@ export default {
       isFullPage: true,
       clientFilestack: null,
       file: {},
+      logo: {},
       loadingUpload: 0,
+      loadingUploadLogo: 0,
 
       config: {
         istrict: [],
@@ -149,6 +186,8 @@ export default {
         howToHelp: [],
         aboutMe: [],
         video: '',
+        logo: '',
+        phrase: '',
       },
 
       imgDefault: 'img/default-img.png',
@@ -182,6 +221,8 @@ export default {
       try {
         this.isLoading = true
         if (this.file.name) await this.uploadFile()
+        if (this.logo.name) await this.uploadLogo()
+
         await axios.put('/forms', this.config)
         this.isLoading = false
       } catch (error) {
@@ -221,6 +262,40 @@ export default {
             this.loadingUpload = 0
             this.$buefy.toast.open({
               message: `Error al subir video, intente de nuevo`,
+              position: 'is-top',
+              type: 'is-danger',
+            })
+            console.log(err)
+            return reject(err)
+          })
+      })
+    },
+    async uploadLogo() {
+      this.isLoading = true
+      this.loadingUploadLogo = 1
+      return new Promise((resolve, reject) => {
+        this.loadingUploadLogo = 1
+        this.clientFilestack
+          .upload(
+            this.logo,
+            {
+              onProgress: (obj) => (this.loadingUploadLogo = obj.totalPercent),
+            },
+            {},
+            {}
+          )
+          .then((res) => {
+            this.isLoading = false
+            this.config.logo = res.url
+            this.logo = {}
+            this.loadingUploadLogo = 0
+            return resolve(true)
+          })
+          .catch((err) => {
+            this.isLoading = false
+            this.loadingUploadLogo = 0
+            this.$buefy.toast.open({
+              message: `Error al subir logo, intente de nuevo`,
               position: 'is-top',
               type: 'is-danger',
             })
