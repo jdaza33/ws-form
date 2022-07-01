@@ -154,3 +154,23 @@ label.error {
   font-weight: bold;
   font-size: 12px;
   color: #000; }
+
+  /* .FlexContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    width: 65%;
+    background-color: #2f1d58;
+    height: 80vh;
+    overflow: auto;
+    flex-direction: row;
+}
+
+.FlexContainer div {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    background-color: lightblue;
+} */

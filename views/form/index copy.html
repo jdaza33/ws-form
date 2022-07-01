@@ -121,10 +121,7 @@
               </p>
               <div class="mb-5">
                 <div class="row">
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('name')"
-                  >
+                  <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label">Nombre(s)</label>
                     <input
                       type="text"
@@ -135,10 +132,7 @@
                       v-model="person.name"
                     />
                   </div>
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('lastname1')"
-                  >
+                  <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label"
                       >Apellido Paterno</label
                     >
@@ -151,11 +145,10 @@
                       v-model="person.lastname1"
                     />
                   </div>
+                </div>
 
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('lastname2')"
-                  >
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label"
                       >Apellido Materno</label
                     >
@@ -168,11 +161,7 @@
                       v-model="person.lastname2"
                     />
                   </div>
-
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('birthdate')"
-                  >
+                  <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label"
                       >Fecha de cumpleaños</label
                     >
@@ -187,7 +176,7 @@
                       placeholder="¿Cuando cumples?"
                       style="
                         background: #fff
-                          url(https://www.svgrepo.com/show/7076/monthly-calendar.svg)
+                          url(https://peru.eleckto.com/soritor/img/calendar.svg)
                           no-repeat right center;
                         color: black;
                       "
@@ -201,58 +190,37 @@
                       v-model="person.birthdate"
                     /> -->
                   </div>
+                </div>
 
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('district')"
-                  >
-                    <label for="" class="col-form-label"
-                      >{{config.fields.find(f => f.field === 'district') ?
-                      config.fields.find(f => f.field === 'district').display :
-                      'n/a'}}</label
-                    >
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Distrito</label>
                     <select
                       class="form-control"
                       id="district"
                       v-model="person.district"
                     >
-                      <option value="0" selected>
-                        Selecciona tu {{config.fields.find(f => f.field ===
-                        'district') ? config.fields.find(f => f.field ===
-                        'district').display : 'n/a'}}
-                      </option>
+                      <option value="0" selected>Selecciona tu distrito</option>
                       <option v-for="item in config.district">{{item}}</option>
                       <!-- <option>SORITOR</option> -->
                     </select>
                   </div>
 
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('town')"
-                  >
-                    <label for="" class="col-form-label"
-                      >{{config.fields.find(f => f.field === 'town') ?
-                      config.fields.find(f => f.field === 'town').display :
-                      'n/a'}}</label
-                    >
+                  <div class="col-md-6 form-group mb-3">
+                    <label for="" class="col-form-label">Ciudad</label>
                     <select
                       id="town"
                       class="form-control"
                       v-model="person.town"
                     >
-                      <option value="0">
-                        Selecciona {{config.fields.find(f => f.field === 'town')
-                        ? config.fields.find(f => f.field === 'town').display :
-                        'n/a'}}
-                      </option>
+                      <option value="0">¿Dónde vives?</option>
                       <option v-for="item in config.town">{{item}}</option>
                     </select>
                   </div>
+                </div>
 
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('country')"
-                  >
+                <div class="row">
+                  <div class="col-md-4 form-group mb-3">
                     <label for="" class="col-form-label">País</label>
                     <select
                       name="dial_code"
@@ -263,10 +231,7 @@
                       <option value="+51">🇵🇪 Perú</option>
                     </select>
                   </div>
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('phone')"
-                  >
+                  <div class="col-md-8 form-group mb-3">
                     <label for="" class="col-form-label">Celular</label>
                     <input
                       type="number"
@@ -277,11 +242,10 @@
                       v-model="person.phone"
                     />
                   </div>
+                </div>
 
-                  <div
-                    class="col-md-12 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('worry')"
-                  >
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
                     <label for="" class="col-form-label">Preocupación</label>
                     <select
                       id="concern"
@@ -301,11 +265,10 @@
                       v-model="otherWorry"
                     />
                   </div>
+                </div>
 
-                  <div
-                    class="col-md-12 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('proposal')"
-                  >
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
                     <label for="" class="col-form-label">Propuesta</label>
                     <input
                       type="text"
@@ -317,11 +280,10 @@
                       v-model="person.proposal"
                     />
                   </div>
+                </div>
 
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('howToHelp')"
-                  >
+                <div class="row">
+                  <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label">Ayuda</label>
                     <div class="form-group">
                       <p>¿Cómo te gustaría sumar?</p>
@@ -367,10 +329,7 @@
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="col-md-6 form-group mb-3"
-                    v-show="config.fields.filter(f => f.show).map(f => f.field).includes('aboutMe')"
-                  >
+                  <div class="col-md-6 form-group mb-3">
                     <label for="" class="col-form-label">Sobre ti</label>
                     <div class="form-group">
                       <p>¿Dime algo más sobre ti?</p>
@@ -501,7 +460,7 @@
           const { groupId } = this.getParams()
           this.groupId = groupId
           console.log('groupId', groupId)
-
+          
           this.listFormConfig()
           // Initialization
           // $('#cumple').datepicker([options])
@@ -514,8 +473,6 @@
         mounted() {
           $('#modalWelcome').modal({ show: true, backdrop: 'static' })
           // this.$refs.videoRef.src = this.config.video
-          // let videoW = document.getElementById('video-welcome')
-          // videoW.play()
           this.$refs.videoRef.play()
         },
         data() {
@@ -523,10 +480,10 @@
             data: [],
             groupId: null,
             userId: null,
-            api: 'https://ws-form.herokuapp.com/api',
-            form: 'https://ws-form.herokuapp.com',
-            // api: 'http://localhost:3010/api',
-            // form: 'http://localhost:3010',
+            // api: 'https://ws-form.herokuapp.com/api',
+            // form: 'https://ws-form.herokuapp.com',
+            api: 'http://localhost:3010/api',
+            form: 'http://localhost:3010',
             config: {
               istrict: [],
               town: [],
@@ -536,7 +493,6 @@
               video: '',
               phrase: '',
               logo: '',
-              fields: [],
             },
             person: {
               name: null,
@@ -631,7 +587,7 @@
               })
           },
           generateLink(id) {
-            return `${this.form}/form?ref=${id}&groupId=${this.groupId}`
+            return `${this.form}/form?ref=${id}`
           },
           copyToClipboard(str) {
             if (
@@ -655,8 +611,6 @@
 
           closeModalWelcome() {
             this.$refs.videoRef.pause()
-            // let videoW = document.getElementById('video-welcome')
-            // videoW.pause()
           },
         },
       })

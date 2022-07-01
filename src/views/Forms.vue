@@ -13,10 +13,101 @@
           </div>
           <!-- Lista de articulos -->
           <div class="card contenedor sombra">
+            <h1
+              class="is-size-6 has-text-weight-bold has-text-centered is-uppercase has-text-primary"
+            >
+              Selecciona los campos a mostrar
+            </h1>
+            <br />
+
             <div class="columns">
               <div class="column is-6">
                 <section>
-                  <b-field label="Distritos">
+                  <b-field
+                    v-for="field in config.fields.slice(0, 6)"
+                    :key="field.field"
+                  >
+                    <b-checkbox
+                      v-model="field.show"
+                      :native-value="field.show"
+                      >{{ field.display }}</b-checkbox
+                    >
+                  </b-field>
+                </section>
+              </div>
+              <div class="column is-6">
+                <section>
+                  <b-field
+                    v-for="field in config.fields.slice(6, 12)"
+                    :key="field.field"
+                  >
+                    <b-checkbox
+                      v-model="field.show"
+                      :native-value="field.show"
+                      >{{ field.display }}</b-checkbox
+                    >
+                  </b-field>
+                </section>
+              </div>
+            </div>
+
+            <hr />
+            <h1
+              class="is-size-6 has-text-weight-bold has-text-centered is-uppercase has-text-primary"
+            >
+              Edita los nombres de los campos
+            </h1>
+            <br />
+
+            <div class="columns">
+              <div class="column is-6">
+                <section>
+                  <b-field label="Ejemplo: Distrito">
+                    <b-input
+                      v-model="
+                        config.fields.find((c) => c.field === 'district')
+                          .display
+                      "
+                      size="is-default"
+                      type="text"
+                    ></b-input>
+                  </b-field>
+                </section>
+              </div>
+              <div class="column is-6">
+                <section>
+                  <b-field label="Ejemplo: Ciudad">
+                    <b-input
+                      v-model="
+                        config.fields.find((c) => c.field === 'town').display
+                      "
+                      size="is-default"
+                      type="text"
+                    ></b-input>
+                  </b-field>
+                </section>
+              </div>
+            </div>
+
+            <hr />
+            <h1
+              class="is-size-6 has-text-weight-bold has-text-centered is-uppercase has-text-primary"
+            >
+              Datos del formulario
+            </h1>
+
+            <br />
+            <div class="columns">
+              <div class="column is-6">
+                <section>
+                  <b-field
+                    :label="
+                      config.fields.find((f) => f.field === 'district')
+                        ? config.fields.find((f) => f.field === 'district')
+                            .display
+                        : 'n/a'
+                    "
+                  >
                     <b-taginput
                       v-model="config.district"
                       ellipsis
@@ -30,7 +121,13 @@
               </div>
               <div class="column is-6">
                 <section>
-                  <b-field label="Ciudades">
+                  <b-field
+                    :label="
+                      config.fields.find((f) => f.field === 'town')
+                        ? config.fields.find((f) => f.field === 'town').display
+                        : 'n/a'
+                    "
+                  >
                     <b-taginput
                       v-model="config.town"
                       ellipsis
@@ -178,6 +275,7 @@ export default {
       logo: {},
       loadingUpload: 0,
       loadingUploadLogo: 0,
+      groupId: null,
 
       config: {
         istrict: [],
@@ -188,6 +286,7 @@ export default {
         video: '',
         logo: '',
         phrase: '',
+        fields: [],
       },
 
       imgDefault: 'img/default-img.png',
@@ -203,7 +302,9 @@ export default {
     async listConfig() {
       try {
         this.isLoading = true
-        const { data } = await axios.get('/forms/list', {})
+        const { data } = await axios.post('/forms/list', {
+          groupId: this.groupId,
+        })
         this.config = data.form
         this.isLoading = false
       } catch (error) {
@@ -223,7 +324,7 @@ export default {
         if (this.file.name) await this.uploadFile()
         if (this.logo.name) await this.uploadLogo()
 
-        await axios.put('/forms', this.config)
+        await axios.put(`/forms/${this.groupId}`, this.config)
         this.isLoading = false
       } catch (error) {
         console.log(error)
@@ -306,6 +407,7 @@ export default {
     },
   },
   created() {
+    this.groupId = this.$cookie.get('group')
     this.listConfig()
     this.clientFilestack = filestack.init('AEqv8zzjoTnEaIQiO7H9kz')
   },

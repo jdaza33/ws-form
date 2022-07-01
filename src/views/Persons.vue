@@ -195,6 +195,7 @@
 import axios from '../config/axios.js'
 import { json2csv } from 'json-2-csv'
 import fileDownload from 'js-file-download'
+import xlsx from 'json-as-xlsx'
 
 export default {
   data() {
@@ -209,6 +210,9 @@ export default {
       idToEdit: null,
       isEdit: false,
       tabs: 0,
+
+      groupId: null,
+      config: [],
 
       newUser: {
         name: '',
@@ -238,7 +242,7 @@ export default {
         message: `Compartir por Whatsapp`,
         inputAttrs: {
           type: 'text',
-          value: `Hola, te invito a llenar el siguiente formulario: ${process.env.VUE_APP_FORM_URL}`,
+          value: `Hola, te invito a llenar el siguiente formulario: ${process.env.VUE_APP_FORM_URL}?groupId=${this.groupId}`,
         },
         trapFocus: true,
         confirmText: 'Enviar',
@@ -247,25 +251,104 @@ export default {
       })
     },
     jsontoCsv() {
-      const data = this.dataOrigin.map((user) => {
-        let tmp = {}
-        for (let i in user) {
-          if (i === 'howToHelp' || i === 'aboutMe') user[i] = user[i].join(', ')
-          if (i === 'comeFrom' && user[i])
-            user[i] = `${user[i].name} ${user[i].lastname1}`
-          let text = this.parseText(i)
-          if (text !== 'n/a') tmp[text] = user[i]
+      let tempData = [...this.dataOrigin]
+
+      for (let td of tempData) {
+        td.referred = this.users
+          .filter(
+            (dp) =>
+              dp.comeFrom && dp.comeFrom._id.toString() === td._id.toString()
+          )
+          .map((dp) => `${dp.name || 'n/a'} ${dp.lastname1 || 'n/a'}`)
+      }
+
+      tempData = tempData.map((td) => {
+        let tmp = { ...td }
+
+        if (tmp.referred) {
+          tmp.howToHelp =
+            tmp.howToHelp && tmp.howToHelp.length > 0
+              ? tmp.howToHelp.join(', ')
+              : 'n/a'
         }
+        if (tmp.referred) {
+          tmp.aboutMe =
+            tmp.aboutMe && tmp.aboutMe.length > 0
+              ? tmp.aboutMe.join(', ')
+              : 'n/a'
+        }
+        if (tmp.referred) {
+          tmp.referred =
+            tmp.referred && tmp.referred.length > 0
+              ? tmp.referred.join(', ')
+              : 'Ninguno'
+        }
+
+        if (tmp.comeFrom) {
+          tmp.comeFrom = `${tmp.comeFrom.name || 'n/a'} ${
+            tmp.comeFrom.lastname1 || 'n/a'
+          }`
+        }
+
+        delete tmp._id
+        delete tmp.__v
+        delete tmp.groupId
+
         return tmp
       })
 
-      console.log(data)
-      json2csv(this.users, (err, csv) => {
-        if (err) {
-          throw err
-        }
-        fileDownload(csv, `usuarios_${Date.now()}.csv`)
+      console.log(tempData)
+
+      let dataXlsx = [
+        {
+          sheet: 'Reporte',
+          columns: [
+            ...[
+              ...this.config.fields,
+              {
+                field: 'referred',
+                display: 'Referidos',
+                show: true,
+              },
+            ]
+              .filter((f) => f.show)
+              .map((field) => {
+                return { label: field.display, value: field.field }
+              }),
+          ],
+          content: [...tempData],
+        },
+      ]
+
+      let settingsXlsx = {
+        fileName: 'Reporte - ' + Date.now(),
+        extraLength: 3,
+        writeOptions: {},
+      }
+
+      xlsx(dataXlsx, settingsXlsx, function (sheet) {
+        console.log('Download complete:', sheet)
       })
+
+      // const dataa = this.dataOrigin.map((user) => {
+      //   let tmp = {}
+      //   for (let i in user) {
+      //     if (i === 'howToHelp' || i === 'aboutMe') user[i] = user[i].join(', ')
+      //     if (i === 'comeFrom' && user[i])
+      //       user[i] = `${user[i].name} ${user[i].lastname1}`
+      //     let text = this.parseText(i)
+      //     if (text !== 'n/a') tmp[text] = user[i]
+      //   }
+      //   return tmp
+      // })
+
+      // console.log(dataa)
+      // json2csv(this.users, (err, csv) => {
+      //   if (err) {
+      //     throw err
+      //   }
+      //   fileDownload(csv, `usuarios_${Date.now()}.csv`)
+      // })
     },
     msToDate(ms) {
       const date = new Date(ms)
@@ -275,7 +358,9 @@ export default {
     async listUsers() {
       try {
         this.isLoading = true
-        const { data } = await axios.post('/persons/list', {})
+        const { data } = await axios.post('/persons/list', {
+          groupId: this.groupId,
+        })
         this.users = data.person
         this.dataOrigin = data.person
         this.dataPaginate = data.person
@@ -285,6 +370,25 @@ export default {
         this.isLoading = false
         this.$buefy.toast.open({
           message: `Error al obtener lista de Usuarios`,
+          position: 'is-top',
+          type: 'is-danger',
+        })
+      }
+    },
+
+    async listConfig() {
+      try {
+        this.isLoading = true
+        const { data } = await axios.post('/forms/list', {
+          groupId: this.groupId,
+        })
+        this.config = data.form
+        this.isLoading = false
+      } catch (error) {
+        console.log(error)
+        this.isLoading = false
+        this.$buefy.toast.open({
+          message: `Error al obtener lista de configuraciones`,
           position: 'is-top',
           type: 'is-danger',
         })
@@ -363,13 +467,35 @@ export default {
       if (text === 'sharedLink') return '¿Compartio enlace?'
       if (text === 'comeFrom') return 'Referencia'
       if (text === 'createdAt') return 'Fecha de creación'
+      if (text === 'referred') return 'Referido'
+      if (text === 'numberOfReferred') return 'Cantidad Referidos'
       else return 'n/a'
     },
 
     moreInfo(_user) {
       const user = { ..._user }
+
+      user.referred = this.users
+        .filter(
+          (dp) =>
+            dp.comeFrom && dp.comeFrom._id.toString() === user._id.toString()
+        )
+        .map(
+          (dp) =>
+            `<strong><i style="color: #2C3639;">${dp.name || 'n/a'} ${
+              dp.lastname1 || 'n/a'
+            }</i></strong>`
+        )
+
+      user.numberOfReferred = `<strong><i style="color: #3AB0FF;">${user.referred.length}</i></strong>`
+      user.referred =
+        user.referred.length > 0
+          ? user.referred.join(' - ')
+          : '<strong><i style="color: #D61C4E;">Ninguno</i></strong>'
+
       delete user._id
       delete user.__v
+      delete user.groupId
 
       user.createdAt = this.msToDate(user.createdAt)
       // user.birthdate = this.msToDate(user.birthdate)
@@ -392,7 +518,9 @@ export default {
     },
   },
   created() {
+    this.groupId = this.$cookie.get('group')
     this.listUsers()
+    this.listConfig()
   },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="columns">
-      <div class="column is-2" style="padding:0px;">
+      <div class="column is-2" style="padding: 0px">
         <aside class="menu">
           <div class="profile-info">
             <!-- Información del Perfil de Usuario -->
@@ -17,7 +17,60 @@
             <!-- texto -->
             <div class="has-text-centered">
               <h1 class="has-text-weight-bold">{{ name }}</h1>
+              <!-- <h3 class="">{{ name }}</h3> -->
               <!-- <h2 class="has-text-info is-capitalized">{{ rol }}</h2> -->
+            </div>
+
+            <hr />
+
+            <div class="has-text-centered">
+              <h1 class="has-text-weight-bold">Grupo:</h1>
+            </div>
+            <div class="center">
+              <b-field grouped>
+                <b-select
+                  placeholder="Selecciona un grupo"
+                  v-model="group"
+                  size="is-small"
+                  @input="changeGroup"
+                >
+                  <option
+                    v-for="group in groups"
+                    :value="group._id"
+                    :key="group._id"
+                  >
+                    {{ group.name }}
+                  </option>
+                </b-select>
+                <p class="control">
+                  <b-button
+                    @click="createGroup"
+                    class="button is-primary"
+                    icon-left="plus"
+                    icon-pack="fas"
+                    type="is-success"
+                    size="is-small"
+                  ></b-button>
+                  <b-button
+                    @click="linkForm"
+                    class="button is-info"
+                    icon-left="link"
+                    icon-pack="fas"
+                    type="is-info"
+                    size="is-small"
+                  ></b-button>
+                </p>
+              </b-field>
+              <!-- <b-select placeholder="Selecciona un grupo" v-model="group">
+                <option
+                  v-for="group in groups"
+                  :value="group._id"
+                  :key="group._id"
+                >
+                  {{ group.name }}
+                </option>
+              </b-select>
+              <b-icon pack="fas" icon="home" size="is-small"> </b-icon> -->
             </div>
           </div>
           <!-- Opciones del menú -->
@@ -26,7 +79,7 @@
               <a
                 @click="goMenu('Forms')"
                 :class="$route.name == 'Forms' ? 'active' : ''"
-                style="padding: 0.75em;"
+                style="padding: 0.75em"
               >
                 <b-icon
                   pack="fas"
@@ -42,7 +95,7 @@
               <a
                 @click="goMenu('Persons')"
                 :class="$route.name == 'Persons' ? 'active' : ''"
-                style="padding: 0.75em;"
+                style="padding: 0.75em"
               >
                 <b-icon
                   pack="fas"
@@ -59,7 +112,7 @@
               <a
                 @click="goMenu('Admins')"
                 :class="$route.name == 'Admins' ? 'active' : ''"
-                style="padding: 0.75em;"
+                style="padding: 0.75em"
               >
                 <b-icon pack="fas" icon="users" class="iconos" size="is-small">
                 </b-icon>
@@ -68,7 +121,7 @@
             </li>
 
             <li>
-              <a @click="logout()" style="padding: 0.75em;">
+              <a @click="logout()" style="padding: 0.75em">
                 <b-icon
                   pack="fas"
                   icon="sign-out-alt"
@@ -92,9 +145,7 @@
       </div>
       <div
         class="column is-10"
-        :style="
-          `height: ${window.height}px; background-color: #f5f5f5; padding:0px;`
-        "
+        :style="`height: ${window.height}px; background-color: #f5f5f5; padding:0px;`"
       >
         <router-view />
       </div>
@@ -105,9 +156,12 @@
 
 <script>
 import { setTimeout } from 'timers'
+import axios from '../config/axios.js'
 export default {
   data() {
     return {
+      group: null,
+      groups: [],
       window: {
         width: 0,
         height: 0,
@@ -127,6 +181,7 @@ export default {
     window.addEventListener('resize', this.handleResize)
     this.handleResize()
     this.initData()
+    this.listGroups()
   },
   mounted() {
     // this.menuActive = this.$cookie.get('menuActive')
@@ -167,11 +222,91 @@ export default {
     replaceByDefault(e) {
       e.target.src = this.imgDefault
     },
+    async listGroups() {
+      try {
+        this.isLoading = true
+        const { data } = await axios.post('/groups/list', {})
+        this.groups = data.group
+        for (let group of this.groups) {
+          if (group.default) this.group = group._id
+        }
+        if (!this.group && this.groups.length > 0)
+          this.group = this.groups[0]._id
+        this.$cookie.set('group', this.group)
+        this.isLoading = false
+      } catch (error) {
+        console.log(error)
+        this.isLoading = false
+        this.$buefy.toast.open({
+          message: `Error al obtener lista de grupos`,
+          position: 'is-top',
+          type: 'is-danger',
+        })
+      }
+    },
+    async createGroup() {
+      this.$buefy.dialog.prompt({
+        message: 'Ingresa el nombre del nuevo grupo:',
+        inputAttrs: {
+          type: 'text',
+        },
+        confirmText: 'Guardar',
+        trapFocus: true,
+        closeOnConfirm: false,
+        onConfirm: async (value, { close }) => {
+          try {
+            this.isLoading = true
+            await axios.post('/groups/create', { name: value })
+            await this.listGroups()
+            close()
+            this.isLoading = false
+          } catch (error) {
+            console.log(error)
+            close()
+            this.isLoading = false
+            this.$buefy.toast.open({
+              message: `Error al crear grupo`,
+              position: 'is-top',
+              type: 'is-danger',
+            })
+          }
+        },
+      })
+    },
+    async changeGroup(e) {
+      try {
+        this.isLoading = true
+        await axios.get(`/groups/default/${e}`)
+        this.$cookie.set('group', e)
+        window.location.reload()
+        // this.isLoading = false
+      } catch (error) {
+        console.log(error)
+        this.isLoading = false
+        this.$buefy.toast.open({
+          message: `Error al cambiar grupo`,
+          position: 'is-top',
+          type: 'is-danger',
+        })
+      }
+    },
+
+    linkForm() {
+      window.open(
+        `${process.env.VUE_APP_FORM_URL}?groupId=${this.$cookie.get('group')}`,
+        '_blank'
+      )
+    },
   },
 }
 </script>
 
 <style scoped>
+.center {
+  display: flex;
+  justify-content: center;
+}
+
 .main-content {
   font-family: 'Poppins', sans-serif;
 }
