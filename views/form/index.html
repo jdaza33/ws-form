@@ -52,7 +52,12 @@
                 <span style="color: #f08218;"><strong>SORITOR</strong></span>
               </h4> -->
               <h4 class="modal-title" id="welcomeModalTitle">
-                <span style="color: #2b2f92"
+                <span
+                  style="
+                    color: #2b2f92;
+                    text-transform: uppercase;
+                    text-decoration: underline;
+                  "
                   ><strong>{{config.phrase}}</strong></span
                 >
               </h4>
@@ -73,7 +78,16 @@
                 width="65%"
                 controls
                 align="center"
+                v-show="isVideo"
               ></video>
+              <img
+                ref="imgRef"
+                :src="imgWelcome"
+                id="img-welcome"
+                width="65%"
+                alt="welcome"
+                v-show="!isVideo"
+              />
             </div>
             <div class="modal-footer">
               <!-- <button
@@ -253,27 +267,39 @@
                     class="col-md-6 form-group mb-3"
                     v-show="config.fields.filter(f => f.show).map(f => f.field).includes('country')"
                   >
-                    <label for="" class="col-form-label">País</label>
+                    <label for="" class="col-form-label"
+                      >{{config.fields.find(f => f.field === 'country') ?
+                      config.fields.find(f => f.field === 'country').display :
+                      'n/a'}}</label
+                    >
                     <select
                       name="dial_code"
                       id="dial_code"
                       class="form-control"
                       v-model="person.country"
                     >
-                      <option value="+51">🇵🇪 Perú</option>
+                      <!-- <option value="+51">🇵🇪 Perú</option> -->
+                      <option value="0" selected>
+                        Selecciona tu {{config.fields.find(f => f.field ===
+                        'country') ? config.fields.find(f => f.field ===
+                        'country').display : 'n/a'}}
+                      </option>
+                      <option v-for="item in config.country">{{item}}</option>
                     </select>
                   </div>
                   <div
                     class="col-md-6 form-group mb-3"
                     v-show="config.fields.filter(f => f.show).map(f => f.field).includes('phone')"
                   >
-                    <label for="" class="col-form-label">Celular</label>
+                    <label for="" class="col-form-label"
+                      >Número de Celular</label
+                    >
                     <input
                       type="number"
                       class="form-control"
                       name="phone"
                       id="phone"
-                      placeholder="123456789 (9 Dígitos)"
+                      placeholder="999-999-999"
                       v-model="person.phone"
                     />
                   </div>
@@ -512,11 +538,24 @@
           })
         },
         mounted() {
+          let _video = document.getElementById('video-welcome')
+          _video._this = this
+          _video.addEventListener('canplay', function () {
+            console.log('video true')
+            this.$refs.videoRef.play()
+          })
+          _video.addEventListener('error', function (evt) {
+            console.log('video false')
+            evt.currentTarget._this.isVideo = false
+            evt.currentTarget._this.imgWelcome =
+              evt.currentTarget._this.config.video
+          })
+
           $('#modalWelcome').modal({ show: true, backdrop: 'static' })
           // this.$refs.videoRef.src = this.config.video
           // let videoW = document.getElementById('video-welcome')
           // videoW.play()
-          this.$refs.videoRef.play()
+          // this.$refs.videoRef.play()
         },
         data() {
           return {
@@ -527,6 +566,10 @@
             form: 'https://ws-form.herokuapp.com',
             // api: 'http://localhost:3010/api',
             // form: 'http://localhost:3010',
+
+            isVideo: true,
+            imgWelcome:
+              'https://cdn-icons-png.flaticon.com/512/1088/1088537.png',
             config: {
               istrict: [],
               town: [],
@@ -545,7 +588,7 @@
               birthdate: null,
               district: '0',
               town: '0',
-              country: '+51',
+              country: '0',
               phone: null,
               worry: '0',
               proposal: null,

@@ -84,6 +84,7 @@ const Form = mongoose.model(
       ref: 'Groups',
     },
     fields: Array,
+    country: [String],
   })
 )
 
@@ -373,6 +374,7 @@ app.post('/api/groups/create', async (req, res, next) => {
         'Soy deportista',
         'Soy estudiante',
       ],
+      country: ['Algo'],
       video: 'videos/VIDEODEPRUEBA.mp4',
       groupId: group._id,
       fields: [

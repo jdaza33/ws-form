@@ -186,6 +186,29 @@
                 </section>
               </div>
               <div class="column is-6">
+                <section>
+                  <b-field
+                    :label="
+                      config.fields.find((f) => f.field === 'country')
+                        ? config.fields.find((f) => f.field === 'country')
+                            .display
+                        : 'n/a'
+                    "
+                  >
+                    <b-taginput
+                      v-model="config.country"
+                      ellipsis
+                      icon="label"
+                      placeholder="Agrega una opción"
+                      aria-close-label="Delete this tag"
+                    >
+                    </b-taginput>
+                  </b-field>
+                </section>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-6">
                 <b-field label="Video o imagen de bienvenida">
                   <b-field class="file is-primary">
                     <b-upload v-model="file" class="file-label">
@@ -205,20 +228,6 @@
                   show-value
                   format="percent"
                 ></b-progress>
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column is-6">
-                <section>
-                  <b-field label="Frase">
-                    <b-input
-                      v-model="config.phrase"
-                      placeholder="Escribe una frase"
-                      size="is-default"
-                      type="text"
-                    ></b-input>
-                  </b-field>
-                </section>
               </div>
               <div class="column is-6">
                 <b-field label="Logo del formulario">
@@ -240,6 +249,20 @@
                   show-value
                   format="percent"
                 ></b-progress>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-12">
+                <section>
+                  <b-field label="Frase">
+                    <b-input
+                      v-model="config.phrase"
+                      placeholder="Escribe una frase"
+                      size="is-default"
+                      type="text"
+                    ></b-input>
+                  </b-field>
+                </section>
               </div>
             </div>
             <div class="boton">
